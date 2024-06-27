@@ -1,26 +1,37 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="app">
+    <full-page :options="options">
+      <div class="section"><CoverPage></CoverPage></div>
+      <div class="section"><HomePage></HomePage></div>
+    </full-page>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import CoverPage from './components/CoverPage/CoverPage.vue';
+import HomePage from './components/HomePage/HomePage.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    CoverPage,
+    HomePage,
+  },
+  setup() {
+    let options = {
+      scrollBar: false,
+      scrollingSpeed: 1200,
+    }
+
+    return {options}
   }
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped>
+.app {
+  background-image: url('./assets/atri.png');
+  background-size: 100%;
+  filter: brightness(0.85) contrast(0.9);
 }
 </style>
