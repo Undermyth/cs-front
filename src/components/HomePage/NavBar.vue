@@ -5,6 +5,12 @@
             <div class="line"></div>
             <div class="nav-item">
                 <div class="blank"></div>
+                <i class='bx bxs-home-alt-2' style='color:#ffffff'  ></i>
+                <div class="blank"></div>
+                <router-link to="/">主页</router-link>
+            </div>
+            <div class="nav-item">
+                <div class="blank"></div>
                 <i class='bx bx-pencil' style='color:#ffffff' ></i>
                 <div class="blank"></div>
                 <router-link to="/blogs">博客</router-link>
@@ -75,5 +81,12 @@ nav {
 }
 .blank {
     width: 10px;
+}
+a {
+  text-decoration: none;
+  color: #fff;
+}
+.router-link-active {
+  text-decoration: none;
 }
 </style>

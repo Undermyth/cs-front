@@ -52,9 +52,9 @@ h1 {
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 10%;
+    height: 8%;
     padding-left: 20px;
-    background-color: transparent;
+    background-color: transparent
 }
 .content {
     display: flex;
