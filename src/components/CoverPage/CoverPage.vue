@@ -47,6 +47,9 @@ export default {
 h1 {
     margin: 0%;
 }
+p {
+    font-family: "LXGW WenKai", sans-serif;
+}
 .navbar {
     display: flex;
     align-items: center;
@@ -61,7 +64,7 @@ h1 {
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 90%;
+    height: 92%;
     background-color: transparent;
 }
 #typing {
