@@ -8,8 +8,8 @@
                     <p>包括一些比较具有专题性的论文阅读记录和读书记录。实际上大部分的东西都在这里</p>
                 </div>
                 <div class="searchbar">
-                    <input type="text" placeholder="查找专栏...">
-                    <button>
+                    <input type="text" placeholder="查找专栏..." v-model="filter_word">
+                    <button @click="filter_columns">
                         <i class='bx bxs-search-alt-2' style='color:#ffffff'  ></i>
                         <p>搜索</p>
                     </button>
@@ -29,50 +29,30 @@
         </div>
     </div>
 </template>
-<script>
-import { ref } from 'vue';
+<script setup>
+import { ref, onMounted } from 'vue';
 import NavBar from '../HomePage/NavBar.vue';
 import ColumnCard from './ColumnCard.vue';
-export default {
-    name: 'ColumnPage',
-    components: { NavBar, ColumnCard },
-    setup() {
-        const columns = ref([
-            {
-                title: "专栏1",
-                date: "2022-01-01",
-                length: 3,
-                abstract: "a column sentence"
-            },
-            {
-                title: "专栏2",
-                date: "2022-01-01",
-                length: 10,
-                abstract: "a column sentence that is very long"
-            },
-            {
-                title: "专栏3",
-                date: "2022-01-01",
-                length: 10,
-                abstract: "a column sentence that is very very long"
-            },
-            {
-                title: "专栏4",
-                date: "2022-03-01",
-                length: 10,
-                abstract: "a column sentence that is very very long http://zdbk.zju.edu.cn/jwglxt/xtgl/index_initMenu.html?jsdm=06&_t=1719875021984"
-            },
-            {
-                title: "专栏5",
-                date: "2022-01-01",
-                length: 10,
-                abstract: "a column sentence that is very very long"
-            },
-        ])
+import axios from 'axios'
 
-        return { columns }
-    }
+const columns = ref(null)
+const filter_word = ref(null)
+
+const filter_columns = async () => {
+    const response = await axios.get('/get_columns', {
+        params: {
+            filter: filter_word.value,
+        }
+    });
+    console.log(response.data);
+    columns.value = response.data;
 }
+
+onMounted(async () => {
+    const response = await axios.get('/get_columns');
+    console.log(response.data);
+    columns.value = response.data;
+})
 </script>
 <style scoped>
 .column-page-wrapper {

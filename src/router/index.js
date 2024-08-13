@@ -28,6 +28,12 @@ const router = createRouter({
             path: '/logs',
             name: 'logs',
             component: defineAsyncComponent(() => import('../components/LogsPage/LogsPage.vue'))
+        },
+        {
+            path: '/article/:article_id',
+            name: 'article',
+            component: defineAsyncComponent(() => import('../components/ReadPage/ReadPage.vue')),
+            props: true,
         }
     ]
 })

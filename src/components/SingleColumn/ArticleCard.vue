@@ -50,4 +50,9 @@ export default {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+.abstract {
+    width: 95%;
+    font-family: "LXGW WenKai", sans-serif;
+}
 </style>

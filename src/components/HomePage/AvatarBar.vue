@@ -4,19 +4,37 @@
         <Avatar :size="128" src="https://s2.loli.net/2024/06/27/P9HVKweLqvRCJhb.jpg"></Avatar>
         <h1>chensy</h1>
         <div class="statistic">
-            <StatisticalUtil title="文章数" value="10"></StatisticalUtil>
-            <StatisticalUtil title="专栏数" value="10"></StatisticalUtil>
-            <StatisticalUtil title="日志数" value="10"></StatisticalUtil>
+            <StatisticalUtil title="文章数" :value="article_count"></StatisticalUtil>
+            <StatisticalUtil title="专栏数" :value="column_count"></StatisticalUtil>
+            <StatisticalUtil title="日志数" :value="log_count"></StatisticalUtil>
         </div>
     </div>
 </template>
 
-<script>
+<script setup>
+import axios from 'axios';
+import { onMounted, ref } from 'vue';
 import StatisticalUtil from "./StatisticUtil.vue";
-export default {
-    name: "AvatarBar",
-    components: {StatisticalUtil}
-}
+
+const article_count = ref(null)
+const log_count = ref(null)
+const column_count = ref(null)
+
+onMounted(async () => {
+    try {
+        const article_respose = await axios.get('/get_num_of_articles');
+        article_count.value = article_respose.data.article_counts;
+    
+        const log_response = await axios.get('/get_num_of_logs');
+        log_count.value = log_response.data.log_counts;
+    
+        const column_response = await axios.get('/get_num_of_columns');
+        column_count.value = column_response.data.column_counts;
+    } 
+    catch(error) {
+        console.log("mounting error: ", error);
+    }
+})
 </script>
 
 <style scoped>

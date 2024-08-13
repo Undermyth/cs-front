@@ -8,8 +8,8 @@
                     <p>此处包括有记录的所有文章，包括专栏和日志，以及一些未分类（不知道怎么分类，或者试验性阅读，还没有成系统）的文章</p>
                 </div>
                 <div class="searchbar">
-                    <input type="text" placeholder="搜索文章...">
-                    <button>
+                    <input type="text" placeholder="搜索文章..." v-model="filter_word">
+                    <button @click="filter_articles">
                         <i class='bx bxs-search-alt-2' style='color:#ffffff'  ></i>
                         <p>搜索</p>
                     </button>
@@ -29,50 +29,32 @@
         </div>
     </div>
 </template>
-<script>
-import { ref } from 'vue';
+<script setup>
+
+import { ref, onMounted } from 'vue';
 import NavBar from '../HomePage/NavBar.vue';
 import ArticleCard from '../SingleColumn/ArticleCard.vue';
-export default {
-    name: 'ColumnPage',
-    components: { NavBar, ArticleCard },
-    setup() {
-        const articles = ref([
-            {
-                title: "专栏1",
-                date: "2022-01-01",
-                length: 3,
-                abstract: "a column sentence"
-            },
-            {
-                title: "专栏2",
-                date: "2022-01-01",
-                length: 10,
-                abstract: "a column sentence that is very long"
-            },
-            {
-                title: "专栏3",
-                date: "2022-01-01",
-                length: 10,
-                abstract: "a column sentence that is very very long"
-            },
-            {
-                title: "专栏4",
-                date: "2022-03-01",
-                length: 10,
-                abstract: "a column sentence that is very very long http://zdbk.zju.edu.cn/jwglxt/xtgl/index_initMenu.html?jsdm=06&_t=1719875021984"
-            },
-            {
-                title: "专栏5",
-                date: "2022-01-01",
-                length: 10,
-                abstract: "a column sentence that is very very long"
-            },
-        ])
+import axios from 'axios'
 
-        return { articles }
-    }
+const articles = ref(null)
+const filter_word = ref(null)
+
+const filter_articles = async () => {
+    console.log(filter_word.value);
+    const response = await axios.get('/get_articles', {
+        params: {
+            filter: filter_word.value,
+        }
+    });
+    console.log(response.data);
+    articles.value = response.data;
 }
+
+
+onMounted(async () => {
+    const response = await axios.get('/get_articles');
+    articles.value = response.data;
+})
 </script>
 <style scoped>
 .column-page-wrapper {

@@ -8,8 +8,8 @@
                     <p>此处包含所有的实验记录，以及一个总日志。总日志中记录了所有的学术相关/不务正业的学习进展和思考感想</p>
                 </div>
                 <div class="searchbar">
-                    <input type="text" placeholder="搜索日志...">
-                    <button>
+                    <input type="text" placeholder="搜索日志..." v-model="filter_word">
+                    <button @click="filter_logs">
                         <i class='bx bxs-search-alt-2' style='color:#ffffff'  ></i>
                         <p>搜索</p>
                     </button>
@@ -30,55 +30,30 @@
         </div>
     </div>
 </template>
-<script>
-import { ref } from 'vue';
+<script setup>
+import axios from 'axios';
+import { onMounted, ref } from 'vue';
 import NavBar from '../HomePage/NavBar.vue';
 import LogCard from './LogCard.vue';
-export default {
-    name: 'ColumnPage',
-    components: { NavBar, LogCard },
-    setup() {
-        const articles = ref([
-            {
-                title: "专栏1",
-                start_date: "2022-01-01",
-                update_date: "2022-01-01",
-                length: 3,
-                abstract: "a column sentence"
-            },
-            {
-                title: "专栏1",
-                start_date: "2022-01-01",
-                update_date: "2022-01-01",
-                length: 3,
-                abstract: "a column sentence"
-            },
-            {
-                title: "专栏1",
-                start_date: "2022-01-01",
-                update_date: "2022-01-01",
-                length: 3,
-                abstract: "a column sentence"
-            },
-            {
-                title: "专栏1",
-                start_date: "2022-01-01",
-                update_date: "2022-01-01",
-                length: 3,
-                abstract: "a column sentence"
-            },
-            {
-                title: "专栏1",
-                start_date: "2022-01-01",
-                update_date: "2022-01-01",
-                length: 3,
-                abstract: "a column sentence"
-            },
-        ])
 
-        return { articles }
-    }
+const articles = ref(null)
+const filter_word = ref(null)
+
+const filter_logs = async () => {
+    const response = await axios.get('/get_logs', {
+        params: {
+            filter: filter_word.value,
+        }   
+    });
+    console.log(response.data);
+    articles.value = response.data;
 }
+
+onMounted(async () => {
+    const response = await axios.get('/get_logs');
+    articles.value = response.data;
+})
+
 </script>
 <style scoped>
 .column-page-wrapper {
