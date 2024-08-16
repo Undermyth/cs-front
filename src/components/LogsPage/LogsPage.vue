@@ -19,6 +19,7 @@
             <div class="columns-list">
                 <div class="column" v-for="(column, index) in articles" :key="index">
                     <LogCard class="column-card"
+                        :id="column.id"
                         :title="column.title" 
                         :start_date="column.start_date"
                         :update_date="column.update_date"
@@ -164,9 +165,9 @@ button:hover {
     overflow-y: scroll;
     scrollbar-width: none;
 }
-.column {
-    box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.3);
-}
+/* .column { */
+    /* box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.3); */
+/* } */
 .column:hover {
     cursor: pointer;
 }

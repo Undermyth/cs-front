@@ -10,11 +10,17 @@
   "dependencies": {
     "axios": "^1.7.3",
     "core-js": "^3.8.3",
+    "echarts": "^5.5.1",
     "fullpage.js": "^4.0.25",
+    "highlight.js": "^11.10.0",
+    "katex": "^0.16.11",
     "marked": "^14.0.0",
+    "marked-highlight": "^2.1.4",
+    "text-loader": "^0.0.1",
     "typeit": "^8.8.3",
     "vue": "^3.2.13",
     "vue-amazing-ui": "^1.0.16",
+    "vue-echarts": "^7.0.2",
     "vue-fullpage.js": "^0.2.17"
   },
   "devDependencies": {
@@ -38,7 +44,10 @@
     "parserOptions": {
       "parser": "@babel/eslint-parser"
     },
-    "rules": {}
+    "rules": {
+      "eslint-plugin-vue/no-unused-vars": "off",
+      "no-unused-vars": "off"
+    }
   },
   "browserslist": [
     "> 1%",

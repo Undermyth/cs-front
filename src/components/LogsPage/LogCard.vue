@@ -1,10 +1,10 @@
 <template>
-    <div class="column-card-container">
+    <div class="column-card-container" @click="handleClick">
         <h2>{{ title }}</h2>
         <div class="addition-info">
             <p>
                 <i class='bx bx-play-circle' style='color:rgba(0,0,0,0.5)'  ></i>
-                创建时间：{{ start_date }}
+                创建时间：{{ props.start_date }}
             </p>
             <p>
                 <i class='bx bx-pause-circle' style='color:rgba(0,0,0,0.5)' ></i>
@@ -12,17 +12,49 @@
             </p>
             <p>
                 <i class='bx bx-book-open' style='color:rgba(0,0,0,0.5)' ></i>
-                记录数量：{{ length }}
+                记录数量：{{ props.length }}
             </p>
         </div>
         <div class="line"></div>
-        <div class="abstract">{{ abstract }}</div>
+        <div class="abstract">{{ props.abstract }}</div>
     </div>
 </template>
-<script>
-export default {
-    name: "LogCard",
-    props: ['start_date', 'update_date', 'title', 'length', 'abstract'],
+<script setup>
+import { defineProps } from 'vue';
+import { useRouter } from 'vue-router'
+
+const props = defineProps({
+    id: {
+        type: String,
+        required: true,
+    },
+    start_date: {
+        type: String,
+        required: true,
+    },
+    update_date: {
+        type: String, 
+        required: true,
+    },
+    title: {
+        type: String,
+        required: true,
+    },
+    length: {
+        type: String,
+        required: true,
+    },
+    abstract: {
+        type: String, 
+        required: true,
+    }
+})
+
+const router = useRouter()
+
+const handleClick = () => {
+    const url = "/log/" + props.id;
+    router.push(url);
 }
 </script>
 <style scoped>
@@ -36,7 +68,24 @@ export default {
     width: 100%;
     height: 200px;
     background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
 }
+
+.column-card-container:hover {
+    cursor: pointer;
+    transform: translateY(-10px);
+}
+
+h2 {
+    color: black;
+    transition: all 0.3s ease;
+}
+
+h2:hover {
+    color: var(--ctp-latte-pink);
+}
+
 .addition-info {
     display: flex;
     flex-flow: row;

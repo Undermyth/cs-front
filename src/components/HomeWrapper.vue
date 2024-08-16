@@ -19,6 +19,7 @@ export default {
         let options = {
             scrollBar: false,
             scrollingSpeed: 1200,
+            normalScrollElements: '#progress',
         }
         return {options}
     }

@@ -1,8 +1,17 @@
-const { defineConfig } = require('@vue/cli-service')
+const { defineConfig } = require('@vue/cli-service');
 module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
-    host: '0.0.0.0', // 监听所有网络接口
-    port: 8080,      // 可以自定义端口号
+    host: '0.0.0.0',
+    port: 8080,
+  },
+  chainWebpack: config => {
+    // 添加 text-loader 规则
+    config.module
+      .rule('text')
+      .test(/\.(txt|md)$/) // 匹配 .txt 和 .md 文件
+      .use('text-loader')
+      .loader('text-loader')
+      .end();
   }
-})
+});

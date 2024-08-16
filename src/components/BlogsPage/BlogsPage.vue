@@ -5,7 +5,7 @@
                 <div class="intro">
                     <h2>博客</h2>
                     <div class="line"></div>
-                    <p>此处包括有记录的所有文章，包括专栏和日志，以及一些未分类（不知道怎么分类，或者试验性阅读，还没有成系统）的文章</p>
+                    <p>此处包括有记录的所有文章，包括专栏和日志，以及一些未分类的文章</p>
                 </div>
                 <div class="searchbar">
                     <input type="text" placeholder="搜索文章..." v-model="filter_word">
@@ -19,6 +19,7 @@
             <div class="columns-list">
                 <div class="column" v-for="(column, index) in articles" :key="index">
                     <ArticleCard class="column-card"
+                        :id="column.id"
                         :title="column.title" 
                         :date="column.date"
                         :length="column.length"
@@ -164,14 +165,5 @@ button:hover {
     width: 70%;
     overflow-y: scroll;
     scrollbar-width: none;
-}
-.column {
-    box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.3);
-}
-.column:hover {
-    cursor: pointer;
-}
-.column:hover > h2 {
-    color: rgba(26, 109, 243, 0.632);
 }
 </style>

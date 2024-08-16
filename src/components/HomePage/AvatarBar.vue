@@ -47,6 +47,7 @@ onMounted(async () => {
     border-radius: 35px;
     align-items: center;
     color: white;
+    font-family: "LXGW WenKai", sans-serif;
 }
 .pad {
     height: 20px;

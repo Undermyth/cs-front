@@ -1,5 +1,5 @@
 <template>
-    <div class="column-card-container">
+    <div class="column-card-container" @click="handleClick">
         <h2>{{ title }}</h2>
         <div class="addition-info">
             <p>
@@ -15,10 +15,38 @@
         <div class="abstract">{{ abstract }}</div>
     </div>
 </template>
-<script>
-export default {
-    name: "ColumnCard",
-    props: ['title', 'date', 'length', 'abstract'],
+<script setup>
+import { defineProps } from 'vue'
+import { useRouter } from 'vue-router'
+
+const props = defineProps({
+    id: {
+        type: String,
+        required: true,
+    },
+    title: {
+        type: String,
+        required: true,
+    },
+    date: {
+        type: String,
+        required: true,
+    },
+    length: {
+        type: String,
+        required: true,
+    },
+    abstract: {
+        type: String,
+        required: true,
+    }
+})
+
+const router = useRouter()
+
+const handleClick = () => {
+    const url = '/column/' + props.id;
+    router.push(url);
 }
 </script>
 <style scoped>
@@ -32,6 +60,19 @@ export default {
     width: 100%;
     height: 180px;
     background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+.column-card-container:hover {
+    transform: translateY(-10px);
+    cursor: pointer;
+}
+h2 {
+    color: black;
+    transition: all 0.3s ease;
+}
+h2:hover {
+    color: var(--ctp-latte-pink);
 }
 .addition-info {
     display: flex;

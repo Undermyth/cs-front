@@ -89,14 +89,14 @@ h1 {
     background-color: transparent;
 }
 .logdiv {
-    width: 40%;
+    width: 50%;
     height: 100%;
     padding-left: 10px;
     padding-right: 5px;
     background-color: transparent;
 }
 .activitydiv {
-    width: 60%;
+    width: 50%;
     height: 100%;
     padding-left: 5px;
     background-color: transparent;

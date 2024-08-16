@@ -15,9 +15,10 @@ const router = createRouter({
             component: defineAsyncComponent(() => import('../components/ColumnPage/ColumnPage.vue'))
         },
         {
-            path: '/single-col-test',
-            name: 'single-col-test',
-            component: defineAsyncComponent(() => import('../components/SingleColumn/SingleColumnPage.vue'))
+            path: '/column/:column_id',
+            name: 'column',
+            component: defineAsyncComponent(() => import('../components/SingleColumn/SingleColumnPage.vue')),
+            props: true,
         },
         {
             path: '/blogs',
@@ -34,6 +35,17 @@ const router = createRouter({
             name: 'article',
             component: defineAsyncComponent(() => import('../components/ReadPage/ReadPage.vue')),
             props: true,
+        },
+        {
+            path: '/log/:log_id',
+            name: 'log',
+            component: defineAsyncComponent(() => import('../components/ReadPage/ReadLogPage.vue')),
+            props: true,
+        },
+        {
+            path: '/about',
+            name: 'about',
+            component: defineAsyncComponent(() => import('../components/AboutPage/AboutPage.vue'))
         }
     ]
 })

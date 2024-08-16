@@ -19,6 +19,7 @@
             <div class="columns-list">
                 <div class="column" v-for="(column, index) in columns" :key="index">
                     <ColumnCard class="column-card"
+                        :id="column.id"
                         :title="column.title" 
                         :date="column.date"
                         :length="column.length"
@@ -162,14 +163,5 @@ button:hover {
     width: 70%;
     overflow-y: scroll;
     scrollbar-width: none;
-}
-.column {
-    box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.3);
-}
-.column:hover {
-    cursor: pointer;
-}
-.column:hover > h2 {
-    color: rgba(26, 109, 243, 0.632);
 }
 </style>

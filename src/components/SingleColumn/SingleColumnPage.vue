@@ -11,15 +11,15 @@
                         </p>
                         <p>
                             <i class='bx bx-book-open' style='color:#ffffff' ></i>
-                            内容长度：{{ length }}
+                            文章数量：{{ length }}
                         </p>
                     </div>
                     <div class="line"></div>
                     <p>{{ abstract }}</p>
                 </div>
                 <div class="searchbar">
-                    <input type="text" placeholder="专栏内搜索...">
-                    <button>
+                    <input type="text" placeholder="专栏内搜索..." v-model="filter_word">
+                    <button @click="handleClick">
                         <i class='bx bxs-search-alt-2' style='color:#ffffff'  ></i>
                         <p>搜索</p>
                     </button>
@@ -29,6 +29,7 @@
             <div class="columns-list">
                 <div class="column" v-for="(column, index) in articles" :key="index">
                     <ArticleCard class="column-card"
+                        :id="column.id"
                         :title="column.title" 
                         :date="column.date"
                         :length="column.length"
@@ -39,53 +40,55 @@
         </div>
     </div>
 </template>
-<script>
-import { ref } from 'vue';
+<script setup>
+import axios from 'axios';
+import { ref, defineProps, onMounted } from 'vue';
 import NavBar from '../HomePage/NavBar.vue';
 import ArticleCard from './ArticleCard.vue';
-export default {
-    name: 'ColumnPage',
-    components: { NavBar, ArticleCard },
-    setup() {
-        const title = ref("专栏1");
-        const date = ref("2022-01-01");
-        const length = ref(3);
-        const abstract = ref("a column sentence");
-        const articles = ref([
-            {
-                title: "专栏1",
-                date: "2022-01-01",
-                length: 3,
-                abstract: "a column sentence"
-            },
-            {
-                title: "专栏2",
-                date: "2022-01-01",
-                length: 10,
-                abstract: "a column sentence that is very long"
-            },
-            {
-                title: "专栏3",
-                date: "2022-01-01",
-                length: 10,
-                abstract: "a column sentence that is very very long"
-            },
-            {
-                title: "专栏4",
-                date: "2022-03-01",
-                length: 10,
-                abstract: "a column sentence that is very very long http://zdbk.zju.edu.cn/jwglxt/xtgl/index_initMenu.html?jsdm=06&_t=1719875021984"
-            },
-            {
-                title: "专栏5",
-                date: "2022-01-01",
-                length: 10,
-                abstract: "a column sentence that is very very long"
-            },
-        ])
 
-        return { title, date, length, abstract, articles }
+const props = defineProps({
+    column_id: {
+        type: Number,
+        required: true,
     }
+})
+
+const title = ref(null)
+const date = ref(null)
+const length = ref(null)
+const abstract = ref(null)
+const articles = ref(null)
+const filter_word = ref(null)
+
+onMounted(async () => {
+    const response = await axios.get('/get_articles_in_column', {
+        params: {
+            column_id: props.column_id,
+        }
+    });
+    const metadata = response.data.metadata;
+    const article_list = response.data.articles;
+    articles.value = article_list;
+    title.value = metadata.title;
+    date.value = metadata.date;
+    length.value = metadata.length;
+    abstract.value = metadata.abstract;
+})
+
+const handleClick = async () => {
+    const response = await axios.get('/get_articles_in_column', {
+        params: {
+            column_id: props.column_id,
+            filter: filter_word.value,
+        }
+    });
+    const metadata = response.data.metadata;
+    const article_list = response.data.articles;
+    articles.value = article_list;
+    title.value = metadata.title;
+    date.value = metadata.date;
+    length.value = metadata.length;
+    abstract.value = metadata.abstract;
 }
 </script>
 <style scoped>
@@ -127,7 +130,7 @@ export default {
     border-radius: 20px;
     color: white;
 }
-h1 {
+h2 {
     margin-bottom: 10px;
 }
 p {
@@ -199,14 +202,5 @@ button:hover {
     width: 70%;
     overflow-y: scroll;
     scrollbar-width: none;
-}
-.column {
-    box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.3);
-}
-.column:hover {
-    cursor: pointer;
-}
-.column:hover > h2 {
-    color: rgba(26, 109, 243, 0.632);
 }
 </style>
