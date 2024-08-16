@@ -27,9 +27,11 @@ import TypeIt from "typeit";
 import { onMounted, ref } from "vue";
 import HorizonNav from "./HorizonNav.vue";
 const sentences = ref([
-    "人生天地间，忽如远行客。",
-    "\"人和代码，有一个能跑就可以了\"",
-    "迷子でもいい、迷子でも進め。"
+    "あの光はなに？",
+    "もっと知りたい",
+    "勿相忘 镌于心 直到有朝一日 我们再度相逢",
+    "\"人和代码，有一个能跑就行\"",
+    "迷子でもいい、迷子でも進め"
 ]);
 
 const selectSentence = () => {
