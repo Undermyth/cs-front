@@ -83,10 +83,10 @@ nav {
     width: 10px;
 }
 a {
-  text-decoration: none;
-  color: #fff;
+    text-decoration: none;
+    color: #fff;
 }
 .router-link-active {
-  text-decoration: none;
+    text-decoration: none;
 }
 </style>

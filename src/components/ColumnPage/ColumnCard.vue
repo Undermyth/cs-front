@@ -53,6 +53,7 @@ const handleClick = () => {
 .column-card-container {
     padding-top: 30px;
     padding-left: 30px;
+    padding-right: 30px;
     display: flex;
     flex-flow: column;
     flex: 1;

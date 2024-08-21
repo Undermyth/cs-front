@@ -4,7 +4,7 @@
         <div class="line"></div>
         <div class="heatmap">
             <div class="map">
-                <HeatMap v-if="history" :history="history"></HeatMap>
+                <HeatMap v-if="history" :history="history" :size="heatmap_pixel_size"></HeatMap>
             </div>
             <v-chart class="chart" :option="option" />
         </div>
@@ -12,7 +12,7 @@
 </template>
 <script setup>
 import axios from 'axios';
-import { onMounted, ref, provide } from 'vue';
+import { onMounted, ref, provide, onBeforeUnmount } from 'vue';
 import HeatMap from './HeatMap.vue';
 
 import { PieChart } from "echarts/charts";
@@ -37,6 +37,7 @@ provide(THEME_KEY, "dark");
 
 const history = ref(null);
 const option = ref(null);
+const heatmap_pixel_size = ref(14);
 
 onMounted(async () => {
     const response = await axios.get("https://wakatime.com/share/@b222afd4-2077-4056-8b2b-59337e624f65/0512830d-7109-4068-a05e-24b38aa850da.json");
@@ -80,9 +81,20 @@ onMounted(async () => {
                 }
             }
         ]
-    }
+    };
+    adaptHeatMap();
+    window.addEventListener('resize', adaptHeatMap);
 })
 
+onBeforeUnmount(() => {
+    window.removeEventListener('resize', adaptHeatMap);
+})
+
+const adaptHeatMap = () => {
+    if (window.innerWidth < 1680) {
+        heatmap_pixel_size.value = 10;
+    }
+}
 </script>
 <style scoped>
 h2 {
@@ -120,5 +132,11 @@ h2 {
 }
 .chart {
     width: 40%;
+}
+
+@media screen and (max-width: 1680px) {
+    .chart {
+        width: 30%;
+    }
 }
 </style>

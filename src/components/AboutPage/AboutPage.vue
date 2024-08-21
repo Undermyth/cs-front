@@ -1,5 +1,6 @@
 <template>
     <div class="about-wrapper">
+        <div class="mobilebar"><MobileNav :width="50" :height="50"></MobileNav></div>
         <div class="navbar"><HorizonNav></HorizonNav></div>
         <div class="content">
             <div class="read-board">
@@ -9,12 +10,13 @@
     </div>
 </template>
 <script setup>
-import { onMounted, ref } from 'vue';
-import HorizonNav from '../CoverPage/HorizonNav.vue';
-import mdContent from './about.md'
+import hljs from 'highlight.js';
 import { Marked } from 'marked';
 import { markedHighlight } from "marked-highlight";
-import hljs from 'highlight.js';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
+import HorizonNav from '../CoverPage/HorizonNav.vue';
+import MobileNav from '../CoverPage/MobileNav.vue';
+import mdContent from './about.md';
 
 const htmlContent = ref(null);
 
@@ -34,8 +36,20 @@ onMounted(() => {
         })
     );
     htmlContent.value = marked.parse(mdContent);
+    getMobileVh();
+    window.addEventListener('resize', getMobileVh);
 })
 
+onBeforeUnmount(() => {
+    window.removeEventListener('resize', getMobileVh);
+})
+
+const getMobileVh = () => {
+    // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+    let vh = window.innerHeight * 0.01;
+    // Then we set the value in the --vh custom property to the root of the document
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
 </script>
 
 <style scoped>
@@ -44,9 +58,21 @@ onMounted(() => {
     flex-flow: column;
     /* justify-content: center; */
     align-items: center;
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
     width: 100%;
     background-color: transparent;
+    overflow-y: hidden;
+}
+.mobilebar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    background-color: transparent;
+    display: none;
+    /* background-color: rgba(0, 0, 0, 0.1) !important; */
+    /* backdrop-filter: blur(5px) !important; */
 }
 .navbar {
     display: flex;
@@ -153,6 +179,12 @@ onMounted(() => {
     background-color: var(--ctp-latte-mantle);
 }
 
+::v-deep .text-content strong {
+    font-weight: 1200;
+    text-decoration: underline;
+    text-decoration-color: var(--ctp-latte-text);
+}
+
 ::v-deep ul, ol {
     list-style-position: inside;
     padding-left: 0;
@@ -174,4 +206,22 @@ onMounted(() => {
     padding-left: 1.5em; /* 或者你喜欢的任何其他值 */
 }
 
+@media screen and (max-width: 768px) {
+    .read-board {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .mobilebar {
+        display: block;
+    }
+    .navbar {
+        display: none;
+    }
+    .read-board {
+        width: 95%;
+        height: 90%;
+    }
+}
 </style>

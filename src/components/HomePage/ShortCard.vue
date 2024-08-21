@@ -102,4 +102,10 @@ h2 {
     width: 95%;
     font-family: "LXGW WenKai", sans-serif;
 }
+
+@media screen and (max-width: 1680px) {
+    .column-card-container {
+        height: 250px;
+    }
+}
 </style>

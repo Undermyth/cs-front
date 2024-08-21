@@ -18,15 +18,29 @@
     </div>
 </template>
 
-<script>
+<script setup>
+import { onBeforeUnmount, onMounted } from "vue";
 import ActivityBar from "./ActivityBar.vue";
 import AvatarBar from "./AvatarBar.vue";
 import LogBar from "./LogBar.vue";
 import NavBar from "./NavBar.vue";
 import RecentBar from "./RecentBar.vue";
-export default {
-    name: "HomePage",
-    components: {NavBar, AvatarBar, ActivityBar, LogBar, RecentBar}
+
+onMounted(() => {
+    getMobileVh();
+    window.addEventListener('resize', getMobileVh);
+})
+
+onBeforeUnmount(() => {
+    getMobileVh();
+    window.removeEventListener('resize', getMobileVh);
+})
+
+const getMobileVh = () => {
+    // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+    let vh = window.innerHeight * 0.01;
+    // Then we set the value in the --vh custom property to the root of the document
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
 }
 </script>
 
@@ -42,7 +56,18 @@ h1 {
 .wrapper {
     display: flex;
     width: 100%;
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+}
+.mobilebar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    background-color: transparent;
+    display: none;
+    /* background-color: rgba(0, 0, 0, 0.1) !important; */
+    /* backdrop-filter: blur(5px) !important; */
 }
 .center {
     display: flex;
@@ -107,5 +132,55 @@ h1 {
     width: 100%;
     height: 100%;
     background-color: transparent;
+}
+
+@media screen and (max-width: 1024px) {
+    .center {
+        width: 95%;
+    }
+    .activitydiv {
+        display: none;
+    }
+    .logdiv {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .center {
+        flex-flow: column;
+        align-items: center;
+        gap: 10px;
+    }
+    .navdiv {
+        display: none;
+    }
+    .sidediv {
+        width: 90%;
+    }
+    .avatardiv {
+        height: 100%;
+    }
+    .recentdiv {
+        display: none;
+    }
+    .maindiv {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .upperdiv {
+        height: 100%;
+    }
+    .logdiv {
+        width: 100%;
+        padding-left: 5px;
+        height: 100%;
+    }
+    .wrapper {
+        flex-flow: column;
+    }
+    .mobilebar {
+        display: block;
+    }
 }
 </style>

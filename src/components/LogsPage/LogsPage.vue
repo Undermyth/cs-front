@@ -1,5 +1,6 @@
 <template>
     <div class="column-page-wrapper">
+        <div class="mobilebar"><MobileNav :width="50" :height="50"></MobileNav></div>
         <div class="content">
             <div class="side">
                 <div class="intro">
@@ -14,7 +15,9 @@
                         <p>搜索</p>
                     </button>
                 </div>
-                <NavBar></NavBar>
+                <div class="navbar">
+                    <NavBar></NavBar>
+                </div>
             </div>
             <div class="columns-list">
                 <div class="column" v-for="(column, index) in articles" :key="index">
@@ -33,7 +36,8 @@
 </template>
 <script setup>
 import axios from 'axios';
-import { onMounted, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
+import MobileNav from '../CoverPage/MobileNav.vue';
 import NavBar from '../HomePage/NavBar.vue';
 import LogCard from './LogCard.vue';
 
@@ -53,7 +57,21 @@ const filter_logs = async () => {
 onMounted(async () => {
     const response = await axios.get('/get_logs');
     articles.value = response.data;
+
+    getMobileVh();
+    window.addEventListener('resize', getMobileVh);
 })
+
+onBeforeUnmount(() => {
+    window.removeEventListener('resize', getMobileVh);
+})
+
+const getMobileVh = () => {
+    // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+    let vh = window.innerHeight * 0.01;
+    // Then we set the value in the --vh custom property to the root of the document
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
 
 </script>
 <style scoped>
@@ -62,9 +80,21 @@ onMounted(async () => {
     flex-flow: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
     width: 100%;
+    gap: 10px;
     background-color: transparent;
+}
+.mobilebar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    background-color: transparent;
+    display: none;
+    /* background-color: rgba(0, 0, 0, 0.1) !important; */
+    /* backdrop-filter: blur(5px) !important; */
 }
 .content {
     display: flex;
@@ -112,7 +142,7 @@ p {
     justify-content: center;
     align-items: center;
     display: flex;
-    height: 10%;
+    height: 55px;
     background-color: rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
     border-radius: 20px;
@@ -157,6 +187,9 @@ button:hover {
     background-color: rgba(255, 255, 255, 0.3);
     cursor: pointer;
 }
+.navbar {
+    flex: 1;
+}
 .columns-list {
     display: flex;
     flex-flow: column;
@@ -173,5 +206,83 @@ button:hover {
 }
 .column:hover > h2 {
     color: rgba(26, 109, 243, 0.632);
+}
+
+@media screen and (max-width: 1440px) {
+    .content {
+        width: 80%;
+    }
+}
+@media screen and (max-width: 1024px) {
+    .content {
+        width: 90%;
+    }
+}
+@media screen and (max-width: 768px) {
+    p, input::placeholder, button {
+        font-size: 14px;
+    }
+    button p {
+        display: none;
+    }
+    .searchbar {
+        border-radius: 10px;
+    }
+    ::v-deep .columns-list p {
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    p, input::placeholder, button {
+        font-size: 16px;
+    }
+    ::v-deep .columns-list p {
+        font-size: 16px;
+    }
+    .content {
+        flex-flow: column;
+        overflow-y: scroll;
+        align-items: center;
+    }
+    .navbar {
+        display: none;
+    }
+    .side {
+        width: 80%;
+        height: auto;
+        align-items: center;
+    }
+    .intro {
+        height: auto;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .line {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    .searchbar {
+        width: 100%;
+        height: 50px;
+    }
+    .columns-list {
+        margin-top: 10px;
+        height: auto;
+        width: 100%;
+    }
+    ::v-deep .addition-info {
+        display: none;
+    }
+    .mobilebar {
+        display: block;
+    }
+    .column-page-wrapper {
+        justify-content: flex-start;
+    }
+    .content {
+        gap: 20px;
+        height: 90%;
+    }
 }
 </style>

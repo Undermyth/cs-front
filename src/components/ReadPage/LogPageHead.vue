@@ -35,21 +35,25 @@ const props = defineProps({
 <style scoped>
 .head-wrapper {
     width: 100%;
-    height: 200px;
+    height: auto;
     display: flex;
     flex-flow: column;
     /* background-color: aliceblue; */
     align-items: center;
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
 .title {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 60%;
+    height: auto;
     width: 80%;
     font-size: 35px;
     font-weight: 600;
     font-family: "LXGW WenKai", sans-serif;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .line {

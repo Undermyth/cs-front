@@ -24,6 +24,10 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    size: {
+        type: Number,
+        required: true,
+    }
 });
 
 const maxSeconds = computed(() =>
@@ -50,8 +54,8 @@ const weeks = computed(() => {
 const dayStyle = day => {
     if (!day) return {
         backgroundColor: '#f0f0f0', // 设置无数据的默认背景色
-        width: '14px',
-        height: '14px',
+        width: props.size + 'px',
+        height: props.size + 'px',
         margin: '2px',
     };
 
@@ -64,8 +68,8 @@ const dayStyle = day => {
 
     return {
         backgroundColor: color,
-        width: '14px',
-        height: '14px',
+        width: props.size + 'px',
+        height: props.size + 'px',
         margin: '2px',
     };
 };

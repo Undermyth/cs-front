@@ -1,13 +1,16 @@
 <template>
     <div class="read-page-wrapper">
+        <div class="mobilebar"><MobileNav :width="50" :height="50"></MobileNav></div>
         <div class="content">
-            <div class="read-board" ref="readBoard">
-                <LogPageHead 
-                    :title="title" 
-                    :endtime="endtime"
-                    :length="length">
-                </LogPageHead>
-                <div class="text-content" v-html="blog_content"></div>
+            <div class="read" ref="readBoard" id="read">
+                <div class="read-board">
+                    <LogPageHead 
+                        :title="title" 
+                        :endtime="endtime"
+                        :length="length">
+                    </LogPageHead>
+                    <div class="text-content" v-html="blog_content"></div>
+                </div>
             </div>
             <div class="side">
                 <div class="toc" id="toc" ref="tableOfContent"></div>
@@ -25,6 +28,7 @@ import 'katex/dist/katex.min.css';
 import { Marked } from 'marked';
 import { markedHighlight } from "marked-highlight";
 import { defineProps, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
+import MobileNav from '../CoverPage/MobileNav.vue';
 import NavBar from '../HomePage/NavBar.vue';
 import LogPageHead from './LogPageHead.vue';
 
@@ -82,6 +86,7 @@ onMounted(async () => {
     imgTags.forEach(img => {
         img.style.display = 'block';
         img.style.margin = 'auto';
+        img.style.width = '100%';
     })
 
     renderTeXInDocument();
@@ -119,69 +124,21 @@ onMounted(async () => {
 
     document.getElementById('toc').appendChild(toc);
     
-    window.addEventListener('wheel', handleScroll);
+    getMobileVh();
+    let div = document.getElementById("read");
+    div.addEventListener('wheel', handleScroll);
+    window.addEventListener('resize', getMobileVh);
 })
 
 onBeforeUnmount(() => {
-    window.removeEventListener('wheel', handleScroll);
+    let div = document.getElementById("read");
+    div.removeEventListener('wheel', handleScroll);
+    window.removeEventListener('resize', getMobileVh);
 })
 
 
 const handleScroll = (event) => {
     const readBoardEl = readBoard.value;
-    const maxOffset = 10; // 最大的 Y 偏移量 (vh)
-    const minHeight = 90; // 最小的高度 (vh)
-    const maxOutScroll = 50; // 最大的尾部偏移 (px)
-
-    total_scroll.value += event.deltaY;
-
-    // reach top. DO NOT use readBoardEl.scrollTop == 0 because the scrollbar will reach top
-    // before the animation should be played.
-    if (total_scroll.value < 0) {
-        total_scroll.value = 0;
-    }
-    // prevent sudden scroll and reach bottom
-    if (total_scroll.value > readBoardEl.scrollTop) {
-        total_scroll.value = readBoardEl.scrollTop;
-    }
-    
-    if (Math.abs(readBoardEl.scrollTop + readBoardEl.clientHeight - readBoardEl.scrollHeight) < 10) {
-        out_scroll.value += event.deltaY;
-    }
-    if (out_scroll.value > 0 && event.deltaY < 0) {
-        out_scroll.value += event.deltaY;
-    }
-    if (out_scroll.value < 0) {
-        out_scroll.value = 0;
-    }
-    if (out_scroll.value > maxOutScroll) {
-        out_scroll.value = maxOutScroll;
-    }
-    
-    if (readBoardEl) {
-
-        // 根据滚动距离计算新的偏移量和高度
-        const newOffset = Math.max(0, maxOffset - (total_scroll.value / 10));
-        const newHeight = Math.min(100, minHeight + (total_scroll.value / 10));
-        const newRadius = newOffset * 2;
-
-        // 更新 readBoard 的 transform 和高度
-        readBoardEl.style.transform = `translateY(${newOffset}vh)`;
-        readBoardEl.style.height = `${newHeight}vh`;
-        readBoardEl.style.borderTopLeftRadius = `${newRadius}px`;        
-        readBoardEl.style.borderTopRightRadius = `${newRadius}px`;
-
-        if (out_scroll.value > 0) {
-            const negOffset = -(out_scroll.value) / 10;
-            const negHeight = 100 + negOffset;
-            const negRadius = -negOffset * 4;
-            readBoardEl.style.transform = `translateY(${negOffset}vh)`;
-            readBoardEl.style.height = `${negHeight}vh`;
-            readBoardEl.style.borderBottomLeftRadius = `${negRadius}px`;
-            readBoardEl.style.borderBottomRightRadius = `${negRadius}px`;
-        }
-    }
-
     const tocEl = tableOfContent.value;
     const headings = readBoard.value.querySelectorAll('h1, h2, h3, h4');
     headings.forEach(head => {
@@ -241,6 +198,14 @@ const findOrCreateSubList = (parent) => {
     }
     return subList;
 }
+
+const getMobileVh = () => {
+    // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+    let vh = window.innerHeight * 0.01;
+    // Then we set the value in the --vh custom property to the root of the document
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+    console.log(window.innerHeight, window.innerWidth);
+}
 </script>
 
 <style scoped>
@@ -249,9 +214,21 @@ const findOrCreateSubList = (parent) => {
     flex-flow: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
     width: 100%;
     background-color: transparent;
+}
+
+.mobilebar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    background-color: transparent;
+    display: none;
+    /* background-color: rgba(0, 0, 0, 0.1) !important; */
+    /* backdrop-filter: blur(5px) !important; */
 }
 
 .content {
@@ -262,38 +239,30 @@ const findOrCreateSubList = (parent) => {
     gap: 20px;
 }
 
-.read-board {
+.read {
+    height: 100%;
     width: 70%;
+    padding-top: 10%;
+    padding-bottom: 10%;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+}
+
+.read-board {
+    width: 100%;
     background-color: rgba(245, 245, 245, 0.9);
     backdrop-filter: blur(5px);
     padding-left: 5%;
     padding-right: 5%;
     padding-bottom: 5%;
-    transform: translateY(10vh);
+    /* transform: translateY(10%); */
     transition: transform 0.3s ease, height 0.3s ease;
-    overflow-y: scroll;
-    border-radius: 20px 20px 0px 0px;
+    /* overflow-y: scroll; */
+    border-radius: 20px 20px 20px 20px;
     color: var(--ctp-latte-text);
     scroll-behavior: smooth;
-}
-
-/* Webkit滚动条样式 */
-.read-board::-webkit-scrollbar {
-    width: 10px;
-}
-.read-board::-webkit-scrollbar-track {
-    background: transparent;
-}
-.read-board::-webkit-scrollbar-thumb {
-    background-color: var(--ctp-latte-rosewater);
-    border-radius: 20px;
-    border: 3px solid transparent;
-    background-clip: content-box;
-}
-
-.text-content {
-    line-height: 0.8cm;
-    font-family: "LXGW WenKai", sans-serif;
+    height: auto;
 }
 
 .text-content {
@@ -365,6 +334,12 @@ const findOrCreateSubList = (parent) => {
     background-color: var(--ctp-latte-mantle);
 }
 
+::v-deep .text-content strong {
+    font-weight: 1200;
+    text-decoration: underline;
+    text-decoration-color: var(--ctp-latte-text);
+}
+
 ::v-deep ul, ol {
     list-style-position: inside;
     padding-left: 0;
@@ -391,7 +366,7 @@ const findOrCreateSubList = (parent) => {
     flex-flow: column;
     gap: 10px;
     width: 20%;
-    margin-top: 10vh;
+    margin-top: 10%;
     margin-bottom: 5%;
 }
 
@@ -450,5 +425,36 @@ const findOrCreateSubList = (parent) => {
 ::v-deep .toc a.active {
     font-size: 20px;
     color: var(--ctp-latte-rosewater);
+}
+
+@media screen and (max-width: 768px) {
+    .content {
+        width: 98%;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .side {
+        display: none;
+    }
+    .content {
+        height: 90%;
+        width: 100%;
+    }
+    .read {
+        width: 95%;
+    }
+    ::v-deep .addition-info {
+        display: none;
+    }
+    ::v-deep .head-wrapper {
+        font-size: 30px;
+    }
+    .mobilebar {
+        display: block;
+    }
+    .read-page-wrapper {
+        justify-content: flex-start;
+    }
 }
 </style>

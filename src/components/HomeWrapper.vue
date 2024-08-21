@@ -27,6 +27,9 @@ export default {
 </script>
 <style scoped>
 .home-wrapper {
-  background-color: transparent;
+    background-color: transparent;
+}
+::v-deep .fp-watermark a {
+    display: none !important;
 }
 </style>

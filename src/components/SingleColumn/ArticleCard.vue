@@ -17,7 +17,7 @@
 </template>
 <script setup>
 import { defineProps } from 'vue';
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
 
 const props = defineProps({
     id: {
